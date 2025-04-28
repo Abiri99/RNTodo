@@ -1,13 +1,21 @@
 import React, { JSX } from "react";
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import todosReducer, { todoAdded, todoRemoved, todoUpdated } from './state/todosSlice'
+import HomeScreen from "./ui/HomeScreen";
+import store from './state/store'
 
 function App() {
   return (
-    <SafeAreaView>
-      <Text style={styles.text}>
-       Hello World
-      </Text>
-    </SafeAreaView>
+    <Provider store={store}>
+      <View style={{
+        backgroundColor: '#e0e0e0',
+        flex: 1,
+      }}>
+        <HomeScreen/>
+      </View>
+    </Provider>
   );
 }
 
