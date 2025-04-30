@@ -4,7 +4,6 @@ import { StyleSheet, TextInput, View, TouchableOpacity, Text } from 'react-nativ
 import { todoAdded } from '../state/todosSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { todosSelector } from '../state/todosSelectors';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 function AddTodoScreen() {
   const navigation = useNavigation();
