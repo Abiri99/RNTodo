@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, ViewStyle } from "react-native"
 import Todo from "../model/todo"
+import { useEffect, useState } from "react"
 
 type TodoListItemProps = {
     data: Todo
@@ -7,16 +8,25 @@ type TodoListItemProps = {
     style: ViewStyle
 }
 
-const TodoListItem = (props: TodoListItemProps) => (
-    <View style={props.style}>
-        <View style={styles.container}>
-            <Text style={styles.title}>{props.data.title + ' - index in list: ' + props.index}</Text>
+const TodoListItem = (props: TodoListItemProps) => {
+    let status = props.data.isCompleted ? '✅' : ''
+
+    return (
+        <View style={props.style}>
+            <View style={styles.container}>
+                <Text style={styles.title}>{props.data.title}</Text>
+                <Text style={styles.title}>{status}</Text>
+            </View>
         </View>
-    </View>
-)
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignContent: 'center',
         backgroundColor: 'white',
         borderRadius: 6,
         width: '100%',
