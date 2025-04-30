@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View, Button } from 'react-native';
 import { useSelector } from 'react-redux';
 import TodoListItem from './TodoListItem';
 import Todo from '../model/todo';
 import { todosSelector } from '../state/todosSelectors';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import AddTodoScreen from './AddTodoScreen';
 
-const HomeScreen: React.FC = (props) => {
+function HomeScreen() {
+    const navigation = useNavigation();
     const todos = useSelector(todosSelector)
+
+    const onAddTodoButtonPress = () => {
+        navigation.navigate('AddTodo')
+    }
 
     if (todos.length == 0) {
         return (
-            <View>
-                <Text style={styles.noTodosMessage}>No Todos yet!</Text>
+            <View style={styles.noTodosContainer}>
+                <Button
+                    title='Add Todo!'
+                    onPress={onAddTodoButtonPress}
+                />
             </View>
         )
     } else {
@@ -31,8 +42,15 @@ const styles = StyleSheet.create({
         marginVertical: 4,
         marginHorizontal: 8,
     },
+    addTodoButton: {
+    },
+    noTodosContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignContent: 'center'
+    },
     noTodosMessage: {
-        fontSize: 32,
+        fontSize: 20,
         fontStyle: 'italic',
         alignSelf: 'center',
         verticalAlign: 'middle'
