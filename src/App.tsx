@@ -1,19 +1,30 @@
 import React, { JSX } from "react";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import todosReducer, { todoAdded, todoRemoved, todoUpdated } from './state/todosSlice'
 import HomeScreen from "./ui/HomeScreen";
 import store from './state/store'
 import { createStaticNavigation, NavigationContainer, StackActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddTodoScreen from "./ui/AddTodoScreen";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator({
   initialRouteName: 'Home',
   screens: {
-    Home: HomeScreen,
-    AddTodo: AddTodoScreen,
+    Home: {
+      screen: HomeScreen,
+      options: {
+        headerShown: false,
+      }
+    },
+    AddTodo: {
+      screen: AddTodoScreen,
+      options: {
+        title: 'Add Todo'
+      }
+    }
   }
 });
 
