@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { StyleSheet, TextInput, View, TouchableOpacity, Text } from 'react-native';
-import { todoAdded } from '../state/todosSlice';
+import { todoAdded } from '../../state/todosSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { todosSelector } from '../state/todosSelectors';
+import { todosSelector } from '../../state/todosSelectors';
 
 function AddTodoScreen() {
   const navigation = useNavigation();

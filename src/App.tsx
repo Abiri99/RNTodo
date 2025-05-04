@@ -3,11 +3,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { StyleSheet, Text, View } from "react-native";
 import todosReducer, { todoAdded, todoRemoved, todoUpdated } from './state/todosSlice'
-import HomeScreen from "./ui/HomeScreen";
+import HomeScreen from "./ui/home/HomeScreen";
 import store from './state/store'
 import { createStaticNavigation, NavigationContainer, StackActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddTodoScreen from "./ui/AddTodoScreen";
+import AddTodoScreen from "./ui/add_todo/AddTodoScreen";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator({
