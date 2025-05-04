@@ -1,60 +1,46 @@
+import React, { useState } from 'react';
 import {
   FlatList,
   StyleSheet,
   Text,
-  View,
-  Button,
-  TouchableNativeFeedback,
-  TouchableOpacity,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import TodoListItem from './TodoListItem';
-import {todosSelector} from '../state/todosSelectors';
-import {useNavigation} from '@react-navigation/native';
-import Todo from '../model/todo';
-import {todoCompleted, todoInCompleted, todoRemoved} from '../state/todosSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
 
-function HomeScreen() {
+import TodoListItem from './TodoListItem';
+import TodoFilters from './TodoFilters';
+
+import {
+  todoCompleted,
+  todoInCompleted,
+  todoRemoved,
+} from '../state/todosSlice';
+import { todosSelector } from '../state/todosSelectors';
+import Todo from '../model/todo';
+
+const HomeScreen = () => {
   const navigation = useNavigation();
   const todos = useSelector(todosSelector);
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState('');
 
-  const onAddTodoButtonPress = () => {
-    navigation.navigate('AddTodo');
+  const handleAddTodo = () => navigation.navigate('AddTodo');
+
+  const handleTodoPress = (todo: Todo) => {
+    dispatch(todo.isCompleted ? todoInCompleted({ todo }) : todoCompleted({ todo }));
   };
 
-  const onTodoPress = (todo: Todo) => {
-    if (todo.isCompleted) {
-      dispatch(
-        todoInCompleted({
-          todo: todo,
-        }),
-      );
-    } else {
-      dispatch(
-        todoCompleted({
-          todo: todo,
-        }),
-      );
-    }
-  };
-
-  const onTodoLongPress = (todo: Todo) => {
-    dispatch(
-      todoRemoved({
-        todo: todo,
-      }),
-    );
+  const handleTodoLongPress = (todo: Todo) => {
+    dispatch(todoRemoved({ todo }));
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Search Bar */}
       <TextInput
         style={styles.searchBar}
         placeholder="Search todos..."
@@ -62,38 +48,40 @@ function HomeScreen() {
         onChangeText={setSearch}
       />
 
-      {/* Todo List */}
+      <View style={styles.filterContainer}>
+        <TodoFilters
+          style={styles.todoFilters}
+          onAllSelected={() => {}}
+          onCompletedSelected={() => {}}
+          onIncompletedSelected={() => {}}
+        />
+      </View>
+
       <FlatList
         data={todos}
-        keyExtractor={(item, index) => item.id.toString()}
-        renderItem={({item, index}) => (
+        keyExtractor={item => item.id.toString()}
+        renderItem={({ item, index }) => (
           <TouchableOpacity
-            onPress={() => onTodoPress(item)}
-            onLongPress={() => {
-              onTodoLongPress(item);
-            }}>
-            <TodoListItem
-              data={item}
-              index={index}
-              style={styles.todoItem}
-            />
+            onPress={() => handleTodoPress(item)}
+            onLongPress={() => handleTodoLongPress(item)}
+          >
+            <TodoListItem data={item} index={index} style={styles.todoItem} />
           </TouchableOpacity>
         )}
-        contentContainerStyle={{paddingBottom: 80}} // To avoid overlapping with the sticky button
+        contentContainerStyle={styles.listContent}
       />
 
-      {/* Sticky Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.addButton} onPress={() => onAddTodoButtonPress()}>
+        <TouchableOpacity style={styles.addButton} onPress={handleAddTodo}>
           <Text style={styles.addButtonText}>Add Todo</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#fff'},
+  container: { flex: 1, backgroundColor: '#fff' },
   searchBar: {
     height: 50,
     borderColor: '#ccc',
@@ -102,10 +90,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
   },
+  filterContainer: {
+    margin: 16,
+  },
+  todoFilters: {
+    width: '100%',
+    height: 64,
+  },
   todoItem: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+  },
+  listContent: {
+    paddingBottom: 80,
   },
   footer: {
     position: 'absolute',
@@ -120,9 +118,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#007bff',
     paddingVertical: 12,
     borderRadius: 8,
+    margin: 16,
     marginBottom: 32,
-    marginHorizontal: 16,
-    marginTop: 16,
   },
   addButtonText: {
     color: '#fff',
