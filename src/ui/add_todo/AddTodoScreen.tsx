@@ -14,7 +14,7 @@ function AddTodoScreen() {
 
   const onAddPress = () => {
     const trimmedTitle = title.trim();
-    if (!trimmedTitle) return;
+    if (!trimmedTitle) {return;}
 
     const id = todos.length === 0 ? 1 : todos[todos.length - 1].id + 1;
 

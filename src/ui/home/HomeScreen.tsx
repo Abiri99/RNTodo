@@ -35,7 +35,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
 
   const [search, setSearch] = useState('');
-  const debouncedSearch = useDebouncedValue(search, 300)
+  const debouncedSearch = useDebouncedValue(search, 300);
   const [todosCurrentFilter, setTodosCurrentFilter] = useState<TodosFilter>(
     TodosFilter.All,
   );
@@ -53,8 +53,8 @@ const HomeScreen = () => {
   });
 
   const todos = useMemo(() => {
-    const trimmedSearch = search.trim().toLowerCase();
-    if (trimmedSearch === '') return rawTodos;
+    const trimmedSearch = debouncedSearch.trim().toLowerCase();
+    if (trimmedSearch === '') {return rawTodos;}
 
     return rawTodos.filter(todo =>
       todo.title.toLowerCase().includes(trimmedSearch),

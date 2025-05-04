@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, ViewStyle } from "react-native"
-import Todo from "../model/Todo"
-import { useEffect, useState } from "react"
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import Todo from '../model/Todo';
+import { useEffect, useState } from 'react';
 
 type TodoListItemProps = {
     data: Todo
@@ -9,7 +9,7 @@ type TodoListItemProps = {
 }
 
 const TodoListItem = (props: TodoListItemProps) => {
-    let status = props.data.isCompleted ? '✅' : ''
+    let status = props.data.isCompleted ? '✅' : '';
 
     return (
         <View style={props.style}>
@@ -18,8 +18,8 @@ const TodoListItem = (props: TodoListItemProps) => {
                 <Text style={styles.title}>{status}</Text>
             </View>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 16,
-        color: 'black'
-    }
-})
+        color: 'black',
+    },
+});
 
-export default TodoListItem
+export default TodoListItem;

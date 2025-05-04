@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Todo from "../model/Todo";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import Todo from '../model/Todo';
 
 type ADD_TODO = {
     todo: Todo
@@ -21,7 +21,7 @@ type INCOMPLETE_TODO = {
   todo: Todo
 }
 
-const initialState: Todo[] = []
+const initialState: Todo[] = [];
 
 const todosSlice = createSlice({
     name: 'todos',
@@ -44,27 +44,27 @@ const todosSlice = createSlice({
           if (item.id === action.payload.todo.id) {
             return {
               ...item,
-              isCompleted: true
-            }
+              isCompleted: true,
+            };
           } else {
-            return item
+            return item;
           }
-        })
+        });
       },
       todoInCompleted: (state, action: PayloadAction<INCOMPLETE_TODO>) => {
         return state.map((item) => {
           if (item.id === action.payload.todo.id) {
             return {
               ...item,
-              isCompleted: false
-            }
+              isCompleted: false,
+            };
           } else {
-            return item
+            return item;
           }
-        })
+        });
       },
-    }
+    },
   });
-  
+
   export const { todoAdded, todoUpdated, todoRemoved, todoCompleted, todoInCompleted } = todosSlice.actions;
   export default todosSlice.reducer;
