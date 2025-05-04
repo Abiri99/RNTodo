@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ViewStyle } from "react-native"
-import Todo from "../model/todo"
+import Todo from "../model/Todo"
 import { useEffect, useState } from "react"
 
 type TodoListItemProps = {

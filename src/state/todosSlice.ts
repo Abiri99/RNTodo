@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Todo from "../model/todo";
+import Todo from "../model/Todo";
 
 type ADD_TODO = {
     todo: Todo

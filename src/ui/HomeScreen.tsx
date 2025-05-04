@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -12,16 +12,40 @@ import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import TodoListItem from './TodoListItem';
-import TodoFilters from './TodoFilters';
+import FiltersComponent from './FiltersComponent';
 
 import {todoCompleted, todoInCompleted, todoRemoved} from '../state/todosSlice';
-import {todosSelector} from '../state/todosSelectors';
-import Todo from '../model/todo';
+import {
+  todosCompletedSelector,
+  todosIncompletedSelector,
+  todosSelector,
+} from '../state/todosSelectors';
+import Todo from '../model/Todo';
+import { RootState } from '../state/store';
+
+enum TodosFilter {
+    All = 'All',
+    Completed = 'Completed',
+    Incompleted = 'Incompleted',
+}
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const todos = useSelector(todosSelector);
   const dispatch = useDispatch();
+
+  const [todosCurrentFilter, setTodosCurrentFilter] = useState<TodosFilter>(TodosFilter.All);
+
+  const todos = useSelector((state: RootState) => {
+    switch (todosCurrentFilter) {
+      case TodosFilter.Completed:
+        return todosCompletedSelector(state);
+      case TodosFilter.Incompleted:
+        return todosIncompletedSelector(state);
+      case TodosFilter.All:
+      default:
+        return todosSelector(state);
+    }
+  });
 
   const [search, setSearch] = useState('');
 
@@ -51,11 +75,10 @@ const HomeScreen = () => {
       />
 
       <View style={styles.filterContainer}>
-        <TodoFilters
+        <FiltersComponent
           style={styles.todoFilters}
-          onAllSelected={() => {}}
-          onCompletedSelected={() => {}}
-          onIncompletedSelected={() => {}}
+          enumMap={TodosFilter}
+          onFilterSelected={filter => {setTodosCurrentFilter(filter)}}
         />
       </View>
 

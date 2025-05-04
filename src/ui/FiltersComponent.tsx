@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   StyleProp,
   TouchableOpacity,
 } from 'react-native';
-import { Text } from '@react-navigation/elements';
+import {Text} from '@react-navigation/elements';
 import Animated, {
   ReduceMotion,
   useAnimatedStyle,
@@ -14,35 +14,35 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-type TodoFiltersProps = {
+type FiltersProps<T> = {
   style?: StyleProp<ViewStyle>;
-  onAllSelected: () => void;
-  onCompletedSelected: () => void;
-  onIncompletedSelected: () => void;
+  enumMap: Record<string, T>;
+  onFilterSelected: (filter: T) => void;
 };
 
-type TodoFiltersItemProps = {
+type FilterItemProps = {
   title: string;
   onPress: () => void;
   style: StyleProp<ViewStyle>;
 };
 
-const TodoFiltersItem = ({ title, onPress, style }: TodoFiltersItemProps) => (
+const FilterItem = ({title, onPress, style}: FilterItemProps) => (
   <TouchableOpacity onPress={onPress} style={style}>
     <Text>{title}</Text>
   </TouchableOpacity>
 );
 
-const TodoFilters: React.FC<TodoFiltersProps> = ({
+function FiltersComponent<T extends string | number>({
   style,
-  onAllSelected,
-  onCompletedSelected,
-  onIncompletedSelected,
-}) => {
+  enumMap,
+  onFilterSelected,
+}: FiltersProps<T>) {
   const backgroundPositionFromLeft = useSharedValue(0);
   const [containerWidth, setContainerWidth] = useState(0);
 
   const itemWidth = containerWidth / 3;
+
+  const values = Object.values(enumMap) as T[];
 
   const backgroundStyle = useAnimatedStyle(() => ({
     left: withSpring(backgroundPositionFromLeft.value, {
@@ -56,45 +56,38 @@ const TodoFilters: React.FC<TodoFiltersProps> = ({
     }),
   }));
 
-  const handlePress = (index: number, callback: () => void) => {
+  const handlePress = (value: T) => {
+    const index = values.indexOf(value);
     backgroundPositionFromLeft.value = itemWidth * index;
-    callback();
+    onFilterSelected(value);
   };
 
-  const itemStyle: ViewStyle[] = [styles.item, { width: itemWidth }];
+  const itemStyle: ViewStyle[] = [styles.item, {width: itemWidth}];
 
   return (
     <View
       style={[styles.container, style]}
-      onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
-    >
+      onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}>
       <Animated.View
         pointerEvents="none"
         style={[
           styles.selectedItemBackground,
           backgroundStyle,
-          { width: itemWidth, zIndex: -1 },
+          {width: itemWidth, zIndex: -1},
         ]}
       />
 
-      <TodoFiltersItem
-        title="All"
-        onPress={() => handlePress(0, onAllSelected)}
-        style={itemStyle}
-      />
-      <TodoFiltersItem
-        title="Completed"
-        onPress={() => handlePress(1, onCompletedSelected)}
-        style={itemStyle}
-      />
-      <TodoFiltersItem
-        title="Incompleted"
-        onPress={() => handlePress(2, onIncompletedSelected)}
-        style={itemStyle}
-      />
+      {values.map(value => (
+        <FilterItem
+          key={value.toString()}
+          title={value.toString()}
+          onPress={() => handlePress(value)}
+          style={itemStyle}
+        />
+      ))}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -116,4 +109,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TodoFilters;
+export default FiltersComponent;
