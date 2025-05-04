@@ -21,21 +21,26 @@ import {
   todosSelector,
 } from '../state/todosSelectors';
 import Todo from '../model/Todo';
-import { RootState } from '../state/store';
+import {RootState} from '../state/store';
+import { useDebouncedValue } from '../hooks/useDebounceValue';
 
 enum TodosFilter {
-    All = 'All',
-    Completed = 'Completed',
-    Incompleted = 'Incompleted',
+  All = 'All',
+  Completed = 'Completed',
+  Incompleted = 'Incompleted',
 }
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const [todosCurrentFilter, setTodosCurrentFilter] = useState<TodosFilter>(TodosFilter.All);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebouncedValue(search, 300)
+  const [todosCurrentFilter, setTodosCurrentFilter] = useState<TodosFilter>(
+    TodosFilter.All,
+  );
 
-  const todos = useSelector((state: RootState) => {
+  const rawTodos = useSelector((state: RootState) => {
     switch (todosCurrentFilter) {
       case TodosFilter.Completed:
         return todosCompletedSelector(state);
@@ -47,7 +52,14 @@ const HomeScreen = () => {
     }
   });
 
-  const [search, setSearch] = useState('');
+  const todos = useMemo(() => {
+    const trimmedSearch = search.trim().toLowerCase();
+    if (trimmedSearch === '') return rawTodos;
+
+    return rawTodos.filter(todo =>
+      todo.title.toLowerCase().includes(trimmedSearch),
+    );
+  }, [debouncedSearch, rawTodos]);
 
   const handleAddTodo = () => navigation.navigate('AddTodo');
 
@@ -78,7 +90,9 @@ const HomeScreen = () => {
         <FiltersComponent
           style={styles.todoFilters}
           enumMap={TodosFilter}
-          onFilterSelected={filter => {setTodosCurrentFilter(filter)}}
+          onFilterSelected={filter => {
+            setTodosCurrentFilter(filter);
+          }}
         />
       </View>
 
