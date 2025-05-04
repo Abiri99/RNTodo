@@ -32,6 +32,20 @@ enum TodosFilter {
   Incompleted = 'Incompleted',
 }
 
+const listItemSeparatorComponent = () => (
+  <></>
+);
+
+const noEntryComponent = () => {
+  return (
+    <View style={styles.noEntry}>
+      <Text>
+        No todos yet!
+      </Text>
+    </View>
+  );
+};
+
 const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -112,7 +126,8 @@ const HomeScreen = () => {
         getItemLayout={(data, index) => (
           {length: TODO_LIST_ITEM_HEIGHT, offset: TODO_LIST_ITEM_HEIGHT * index, index}
         )}
-        ItemSeparatorComponent={() => (<></>)}
+        ItemSeparatorComponent={listItemSeparatorComponent}
+        ListEmptyComponent={noEntryComponent}
       />
 
       <View style={styles.footer}>
@@ -126,6 +141,12 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: '#fff'},
+  noEntry: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 30,
+  },
   titleContainer: {
     marginHorizontal: 16,
     marginVertical: 24,
@@ -153,8 +174,6 @@ const styles = StyleSheet.create({
   todoItem: {
     marginVertical: 8,
     marginHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
     height: TODO_LIST_ITEM_HEIGHT,
   },
   listContent: {
