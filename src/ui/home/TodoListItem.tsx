@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
-import Todo from '../model/Todo';
-import { useEffect, useState } from 'react';
+import Todo from '../../model/Todo';
 
 type TodoListItemProps = {
     data: Todo
@@ -27,16 +26,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignContent: 'center',
-        backgroundColor: 'white',
-        borderRadius: 6,
+        alignItems: 'center',
+        backgroundColor: '#ffa500',
+        borderRadius: 12,
+        shadowColor: '#8a8a8a',
+        shadowRadius: 16,
+        shadowOpacity: 0.1,
+        shadowOffset: { height: 20, width: 0 },
         width: '100%',
-        height: 'auto',
-        paddingHorizontal: 12,
+        paddingHorizontal: 24,
         paddingVertical: 16,
     },
     title: {
         fontSize: 16,
-        color: 'black',
+        color: 'white',
     },
 });
 

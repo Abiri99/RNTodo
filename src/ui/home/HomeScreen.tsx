@@ -24,6 +24,8 @@ import Todo from '../../model/Todo';
 import {RootState} from '../../state/store';
 import { useDebouncedValue } from '../../hooks/useDebounceValue';
 
+const TODO_LIST_ITEM_HEIGHT = 60;
+
 enum TodosFilter {
   All = 'All',
   Completed = 'Completed',
@@ -107,6 +109,10 @@ const HomeScreen = () => {
           </TouchableOpacity>
         )}
         contentContainerStyle={styles.listContent}
+        getItemLayout={(data, index) => (
+          {length: TODO_LIST_ITEM_HEIGHT, offset: TODO_LIST_ITEM_HEIGHT * index, index}
+        )}
+        ItemSeparatorComponent={() => (<></>)}
       />
 
       <View style={styles.footer}>
@@ -145,9 +151,11 @@ const styles = StyleSheet.create({
     height: 48,
   },
   todoItem: {
-    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    height: TODO_LIST_ITEM_HEIGHT,
   },
   listContent: {
     paddingBottom: 80,
