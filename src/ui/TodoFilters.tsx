@@ -47,8 +47,8 @@ const TodoFilters: React.FC<TodoFiltersProps> = ({
   const backgroundStyle = useAnimatedStyle(() => ({
     left: withSpring(backgroundPositionFromLeft.value, {
       mass: 1,
-      damping: 12,
-      stiffness: 100,
+      damping: 20,
+      stiffness: 200,
       overshootClamping: false,
       restDisplacementThreshold: 0.01,
       restSpeedThreshold: 2,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   selectedItemBackground: {
     position: 'absolute',
     height: '100%',
-    backgroundColor: '#ccc',
+    backgroundColor: '#e0e0e0',
     borderRadius: 8,
   },
   item: {

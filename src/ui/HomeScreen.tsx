@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -7,19 +7,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import TodoListItem from './TodoListItem';
 import TodoFilters from './TodoFilters';
 
-import {
-  todoCompleted,
-  todoInCompleted,
-  todoRemoved,
-} from '../state/todosSlice';
-import { todosSelector } from '../state/todosSelectors';
+import {todoCompleted, todoInCompleted, todoRemoved} from '../state/todosSlice';
+import {todosSelector} from '../state/todosSelectors';
 import Todo from '../model/todo';
 
 const HomeScreen = () => {
@@ -32,15 +28,21 @@ const HomeScreen = () => {
   const handleAddTodo = () => navigation.navigate('AddTodo');
 
   const handleTodoPress = (todo: Todo) => {
-    dispatch(todo.isCompleted ? todoInCompleted({ todo }) : todoCompleted({ todo }));
+    dispatch(
+      todo.isCompleted ? todoInCompleted({todo}) : todoCompleted({todo}),
+    );
   };
 
   const handleTodoLongPress = (todo: Todo) => {
-    dispatch(todoRemoved({ todo }));
+    dispatch(todoRemoved({todo}));
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Todos</Text>
+      </View>
+
       <TextInput
         style={styles.searchBar}
         placeholder="Search todos..."
@@ -60,11 +62,10 @@ const HomeScreen = () => {
       <FlatList
         data={todos}
         keyExtractor={item => item.id.toString()}
-        renderItem={({ item, index }) => (
+        renderItem={({item, index}) => (
           <TouchableOpacity
             onPress={() => handleTodoPress(item)}
-            onLongPress={() => handleTodoLongPress(item)}
-          >
+            onLongPress={() => handleTodoLongPress(item)}>
             <TodoListItem data={item} index={index} style={styles.todoItem} />
           </TouchableOpacity>
         )}
@@ -81,7 +82,16 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: {flex: 1, backgroundColor: '#fff'},
+  titleContainer: {
+    marginHorizontal: 16,
+    marginVertical: 24,
+  },
+  title: {
+    fontSize: 32,
+    color: '#1f1f1f',
+    fontWeight: 'bold',
+  },
   searchBar: {
     height: 50,
     borderColor: '#ccc',
@@ -95,7 +105,7 @@ const styles = StyleSheet.create({
   },
   todoFilters: {
     width: '100%',
-    height: 64,
+    height: 48,
   },
   todoItem: {
     padding: 16,
