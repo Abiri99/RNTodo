@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -89,6 +89,14 @@ const HomeScreen = () => {
     dispatch(todoRemoved({todo}));
   };
 
+  const renderItem = useCallback(({item, index}) => (
+    <TouchableOpacity
+      onPress={() => handleTodoPress(item)}
+      onLongPress={() => handleTodoLongPress(item)}>
+      <TodoListItem data={item} index={index} style={styles.todoItem} />
+    </TouchableOpacity>
+  ), []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
@@ -115,13 +123,7 @@ const HomeScreen = () => {
       <FlatList
         data={todos}
         keyExtractor={item => item.id.toString()}
-        renderItem={({item, index}) => (
-          <TouchableOpacity
-            onPress={() => handleTodoPress(item)}
-            onLongPress={() => handleTodoLongPress(item)}>
-            <TodoListItem data={item} index={index} style={styles.todoItem} />
-          </TouchableOpacity>
-        )}
+        renderItem={renderItem}
         contentContainerStyle={styles.listContent}
         getItemLayout={(data, index) => (
           {length: TODO_LIST_ITEM_HEIGHT, offset: TODO_LIST_ITEM_HEIGHT * index, index}
