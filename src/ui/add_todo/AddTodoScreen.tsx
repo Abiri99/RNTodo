@@ -1,9 +1,18 @@
-import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
-import { StyleSheet, TextInput, View, TouchableOpacity, Text } from 'react-native';
-import { todoAdded } from '../../state/todosSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { todosSelector } from '../../state/todosSelectors';
+import {useNavigation} from '@react-navigation/native';
+import {useCallback, useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  TouchableOpacity,
+  Text,
+  ViewStyle,
+  ActivityIndicator,
+} from 'react-native';
+import {addTodo} from '../../state/todo/todosSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {todosSelector} from '../../state/todo/todosSelectors';
+import Todo from '../../model/Todo';
 
 function AddTodoScreen() {
   const navigation = useNavigation();
@@ -12,23 +21,51 @@ function AddTodoScreen() {
 
   const [title, setTitle] = useState('');
 
-  const onAddPress = () => {
+  const [addTodoButtonStyle, setAddTodoButtonStyle] = useState<ViewStyle>({});
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [todoAdding, setTodoAdding] = useState<Todo | null>(null);
+
+  useEffect(() => {
+    setAddTodoButtonStyle({
+      backgroundColor: (title.trim() || isLoading) ? '#007bff' : '#ccc',
+    });
+  }, [title, isLoading]);
+
+  useEffect(() => {
+    if (todoAdding === null) {
+      return;
+    }
+
+    if (todos.some((todo) => todo.id === todoAdding.id)) {
+      setIsLoading(false);
+      setTodoAdding(null);
+      navigation.goBack();
+    }
+  }, [todos, navigation, todoAdding]);
+
+  const onAddPress = useCallback(() => {
     const trimmedTitle = title.trim();
-    if (!trimmedTitle) {return;}
+    if (!trimmedTitle) {
+      return;
+    }
 
     const id = todos.length === 0 ? 1 : todos[todos.length - 1].id + 1;
 
+    const todoToAdd = {
+      id,
+      title: trimmedTitle,
+      isCompleted: false,
+    };
+    setIsLoading(true);
+    setTodoAdding(todoToAdd);
     dispatch(
-      todoAdded({
-        todo: {
-          id,
-          title: trimmedTitle,
-          isCompleted: false,
-        },
+      addTodo({
+        todo: todoToAdd,
       }),
     );
-    navigation.goBack();
-  };
+  }, [dispatch, todos, title]);
 
   return (
     <View style={styles.container}>
@@ -39,16 +76,19 @@ function AddTodoScreen() {
         placeholder="What do you need to do?"
         style={styles.titleInput}
         returnKeyType="done"
+        editable={!isLoading}
       />
+
+      {isLoading && (
+        <View style={styles.loadingIndicatorContainer}>
+          <ActivityIndicator size="large" color="#007bff" />
+        </View>
+      )}
 
       <TouchableOpacity
         onPress={onAddPress}
-        style={[
-          styles.addButton,
-          { backgroundColor: title.trim() ? '#007bff' : '#ccc' },
-        ]}
-        disabled={!title.trim()}
-      >
+        style={[styles.addButton, addTodoButtonStyle]}
+        disabled={!title.trim() || isLoading}>
         <Text style={styles.addButtonText}>Add</Text>
       </TouchableOpacity>
     </View>
@@ -61,6 +101,9 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: '#f8f9fa',
     alignContent: 'center',
+  },
+  loadingIndicatorContainer: {
+    marginVertical: 20,
   },
   titleInput: {
     height: 50,

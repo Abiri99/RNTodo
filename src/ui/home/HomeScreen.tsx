@@ -14,12 +14,12 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import TodoListItem from './TodoListItem';
 import FiltersComponent from './FiltersComponent';
 
-import {todoCompleted, todoInCompleted, todoRemoved} from '../../state/todosSlice';
+import {todoCompleted, todoInCompleted, todoRemoved} from '../../state/todo/todosSlice';
 import {
   todosCompletedSelector,
   todosIncompletedSelector,
   todosSelector,
-} from '../../state/todosSelectors';
+} from '../../state/todo/todosSelectors';
 import Todo from '../../model/Todo';
 import {RootState} from '../../state/store';
 import { useDebouncedValue } from '../../hooks/useDebounceValue';

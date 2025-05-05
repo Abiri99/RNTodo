@@ -1,4 +1,4 @@
-import Todo from '../model/Todo';
+import Todo from '../../model/Todo';
 import { todosCompletedSelector, todosIncompletedSelector, todosSelector } from './todosSelectors';
 
 const emptyTodos: Todo[] = [];
