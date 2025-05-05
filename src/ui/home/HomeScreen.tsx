@@ -97,6 +97,10 @@ const HomeScreen = () => {
     </TouchableOpacity>
   ), []);
 
+  const getItemLayout = useCallback((data, index) => (
+    {length: TODO_LIST_ITEM_HEIGHT, offset: TODO_LIST_ITEM_HEIGHT * index, index}
+  ), []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
@@ -125,9 +129,7 @@ const HomeScreen = () => {
         keyExtractor={item => item.id.toString()}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
-        getItemLayout={(data, index) => (
-          {length: TODO_LIST_ITEM_HEIGHT, offset: TODO_LIST_ITEM_HEIGHT * index, index}
-        )}
+        getItemLayout={getItemLayout}
         ItemSeparatorComponent={listItemSeparatorComponent}
         ListEmptyComponent={noEntryComponent}
       />
